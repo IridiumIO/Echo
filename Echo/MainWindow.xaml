@@ -1,0 +1,203 @@
+﻿<ui:FluentWindow x:Class="Echo.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:helpers="clr-namespace:Echo.Helpers" xmlns:local="clr-namespace:Echo"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
+                 xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+                 xmlns:viewmodels="clr-namespace:Echo.ViewModels" xmlns:views="clr-namespace:Echo.Views"
+                 Title="Echo"
+                 Width="1200" Height="700" MinWidth="800" MinHeight="600"
+                 d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
+                 Closing="FluentWindow_Closing" ExtendsContentIntoTitleBar="True"
+                 WindowBackdropType="Mica"
+                 mc:Ignorable="d">
+    <ui:FluentWindow.Resources>
+        <helpers:InverseBoolConverter x:Key="InverseBoolConverter" />
+        <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="Transparent" />
+    </ui:FluentWindow.Resources>
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="370" MinWidth="370" MaxWidth="370" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <GridSplitter Grid.RowSpan="3" Grid.Column="0"
+                      Width="2"
+                      Panel.ZIndex="2"
+                      Background="#20000000" >
+           
+        </GridSplitter>
+
+        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Panel.ZIndex="10"
+                     Background="Transparent" FontSize="10" />
+
+        <ContentPresenter x:Name="RootContentDialog"
+                          Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                          Panel.ZIndex="10" />
+
+        <Grid Grid.Row="0" Grid.RowSpan="2" Grid.Column="0"
+              Panel.ZIndex="1"
+              Background="#B22e3440">
+           
+
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="120" />
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="0,40,0,0" HorizontalAlignment="Center"
+                        Orientation="Vertical">
+                <TextBlock HorizontalAlignment="Center" FontSize="28">
+                    <Run Text="❰" Foreground="#0fffaa" />
+                    <Run Text="❰" Foreground="#0ccc88" />
+                    <Run Text="❰" Foreground="#0ab277" />
+                    <Run Text="Echo" Foreground="#0bbf80" />
+                    <Run Text="❱" Foreground="#099966" />
+                    <Run Text="❱" Foreground="#077f55" />
+                    <Run Text="❱" Foreground="#40077f55" />
+                </TextBlock>
+                <TextBlock Text="Version 1.0"
+                           HorizontalAlignment="Center"
+                           Foreground="#10ffffff" />
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1" Width="230" 
+                  Margin="0,10,0,10" VerticalAlignment="Stretch">
+                <ui:Button Content="Start Monitoring" Width="160"
+                           HorizontalAlignment="Center"
+                           Command="{Binding StartMonitoringCommand}"
+                           Foreground="#0ab277"
+                           IsEnabled="{Binding IsMonitoring, Converter={StaticResource InverseBoolConverter}}"
+                           Visibility="{Binding IsMonitoring, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="Play12" />
+                    </ui:Button.Icon>
+                </ui:Button>
+                <ui:Button Content="Stop Monitoring" 
+                           HorizontalAlignment="Center" Width="160"
+                           Command="{Binding StopMonitoringCommand}"
+                           Foreground="{StaticResource PaletteOrangeBrush}"
+                           IsEnabled="{Binding IsMonitoring}"
+                           Visibility="{Binding IsMonitoring, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
+
+                    <ui:Button.Icon>
+                        <ui:SymbolIcon Symbol="Stop16" />
+                    </ui:Button.Icon>
+                </ui:Button>
+                
+                <ui:DropDownButton Margin="10 0 0 0" Height="32" BorderThickness="0" Width="60">
+                    <ui:SymbolIcon Symbol="Settings28" />
+                    <ui:DropDownButton.Flyout>
+                        <ContextMenu >
+                            <CheckBox Content="Run on Windows Startup" IsChecked="{Binding RunOnWindowsStartup, Mode=TwoWay}"/>
+                            <CheckBox Content="Add to Start Menu" IsChecked="{Binding AddToStartMenu, Mode=TwoWay}"/>
+                        </ContextMenu>
+                    </ui:DropDownButton.Flyout>
+                </ui:DropDownButton>
+            </StackPanel>
+
+            <DockPanel Grid.Row="2"
+                       Margin="30,0,30,20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+                <Grid Height="36"
+                      Margin="0,20,0,0"
+                      DockPanel.Dock="Top">
+
+                    <TextBlock Text="Monitored Programs"
+                               VerticalAlignment="Center"
+                               FontSize="15" FontWeight="SemiBold" />
+
+                    <ui:SplitButton Name="btnAddMod"
+                                    Content="Add"
+                                    Height="36"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Command="{Binding AddProgramCommand}"
+                                    Foreground="White">
+                        <ui:SplitButton.Icon>
+                            <ui:SymbolIcon Symbol="Add12" />
+                        </ui:SplitButton.Icon>
+                        <ui:SplitButton.Flyout>
+                            <ContextMenu >
+                                <MenuItem Command="{Binding AddSteamGameCommand}" CommandParameter="{StaticResource DialogContent}">
+                                    <MenuItem.Header>
+                                        <TextBlock Text="Add Steam Game" />
+                                    </MenuItem.Header>
+                                </MenuItem>
+
+                            </ContextMenu>
+                        </ui:SplitButton.Flyout>
+                    </ui:SplitButton>
+                </Grid>
+
+
+
+
+                <Border Margin="0,10,0,0"
+                        BorderBrush="#434953" BorderThickness="1" CornerRadius="5" DockPanel.Dock="Bottom">
+                    <ui:ListView ItemsSource="{Binding Triggers}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                 SelectedItem="{Binding SelectedProcessVM}">
+                        <ui:ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding ProcessTrigger.DisplayName}"
+                                           Margin="10,5,20,5"
+                                           TextTrimming="CharacterEllipsis" />
+                            </DataTemplate>
+                        </ui:ListView.ItemTemplate>
+
+                    </ui:ListView>
+                </Border>
+
+            </DockPanel>
+
+        </Grid>
+
+        <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                
+                Background="#b22e3440">
+
+            <Grid Visibility="{Binding SelectedProcessVM, Converter={StaticResource NullToVisibilityConverter}}" Margin="0 35 0 0">
+                <views:ProcessView DataContext="{Binding SelectedProcessVM, Mode=OneWay}" />
+            </Grid>
+
+
+        </Border>
+
+        <tray:NotifyIcon x:Name="NotifyIconTray"
+                         Grid.Row="0"
+                         FocusOnLeftClick="True" MenuOnRightClick="True" TooltipText="Echo">
+            <tray:NotifyIcon.Menu>
+                <ContextMenu x:Name="NotifyIconTrayMenu">
+                    <MenuItem Header="Echo" IsEnabled="False" />
+                    <Separator/>
+
+                    <MenuItem Command="{Binding StartMonitoringCommand}" Header="Start Monitoring" Foreground="#0ab277" Visibility="{Binding IsMonitoring, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=False}">
+                        <MenuItem.Icon>
+                            <ui:SymbolIcon Symbol="Play16" Filled="True"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="{Binding StopMonitoringCommand}"  Header="Stop Monitoring"  Foreground="{StaticResource PaletteOrangeBrush}" Visibility="{Binding IsMonitoring, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=True}">
+                        <MenuItem.Icon>
+                            <ui:SymbolIcon Symbol="Stop16" Filled="True"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                    <MenuItem Command="{Binding NotifyIconOpenCommand}" Header="Open" />
+                    <MenuItem Command="{Binding NotifyIconExitCommand}" Header="Exit" />
+                </ContextMenu>
+            </tray:NotifyIcon.Menu>
+        </tray:NotifyIcon>
+
+    </Grid>
+</ui:FluentWindow>

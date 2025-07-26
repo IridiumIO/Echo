@@ -1,0 +1,28 @@
+﻿<Application x:Class="Echo.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Echo"
+             xmlns:helpers="clr-namespace:Echo.Helpers">
+    <Application.Resources>
+        <ResourceDictionary>
+            <helpers:InverseBoolConverter x:Key="InverseBoolConverter"/>
+            <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <helpers:TokenisedFolderPathConverter x:Key="TokenisedFolderPathConverter"/>
+            <helpers:ProcessPathToSymbolConverter x:Key="ProcessPathToSymbolConverter"/>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Wpf.Ui;component/Resources/Theme/Dark.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Wpf.Ui;component/Resources/Wpf.Ui.xaml" />
+                <ResourceDictionary>
+
+                    <StackPanel x:Key="DialogContent">
+                        <TextBlock Text="Lorem ipsumd dolor sit amet, adipisicing elit." TextWrapping="Wrap" />
+                        <CheckBox Content="Upload your content to the cloud." />
+                    </StackPanel>
+
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
