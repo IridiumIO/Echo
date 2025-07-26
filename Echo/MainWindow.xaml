@@ -7,7 +7,7 @@
                  xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
                  xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
                  xmlns:viewmodels="clr-namespace:Echo.ViewModels" xmlns:views="clr-namespace:Echo.Views"
-                 Title="Echo"
+                 Title="Echo" 
                  Width="1200" Height="700" MinWidth="800" MinHeight="600"
                  d:DataContext="{d:DesignInstance Type=viewmodels:MainViewModel}"
                  Closing="FluentWindow_Closing" ExtendsContentIntoTitleBar="True"
@@ -57,7 +57,8 @@
 
             <StackPanel Margin="0,40,0,0" HorizontalAlignment="Center"
                         Orientation="Vertical">
-                <TextBlock HorizontalAlignment="Center" FontSize="28">
+                <ui:Image Source="pack://application:,,,/echobanner.png" Height="55" Margin="0 -10 0 -5" RenderOptions.BitmapScalingMode="HighQuality"/>
+                <!--<TextBlock HorizontalAlignment="Center" FontSize="28">
                     <Run Text="❰" Foreground="#0fffaa" />
                     <Run Text="❰" Foreground="#0ccc88" />
                     <Run Text="❰" Foreground="#0ab277" />
@@ -65,7 +66,7 @@
                     <Run Text="❱" Foreground="#099966" />
                     <Run Text="❱" Foreground="#077f55" />
                     <Run Text="❱" Foreground="#40077f55" />
-                </TextBlock>
+                </TextBlock>-->
                 <TextBlock Text="Version 1.0"
                            HorizontalAlignment="Center"
                            Foreground="#10ffffff" />

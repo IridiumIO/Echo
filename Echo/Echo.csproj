@@ -19,6 +19,10 @@
     <WarningsAsErrors></WarningsAsErrors>    
     <DebugType>none</DebugType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="echobanner.png" />
+  </ItemGroup>
   
   
   <ItemGroup>
@@ -33,6 +37,10 @@
     <PackageReference Include="ValveKeyValue" Version="0.13.1.398" />
     <PackageReference Include="WPF-UI" Version="4.0.3" />
     <PackageReference Include="WPF-UI.Tray" Version="4.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="echobanner.png" />
   </ItemGroup>
 
 </Project>
