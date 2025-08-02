@@ -2,8 +2,10 @@
 using Echo.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.VisualBasic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.Windows;
 using Wpf.Ui;
 
@@ -16,36 +18,45 @@ public partial class App : Application
 {
 
 
-    public static IHost AppHost { get; private set; }
+    public static IHost? AppHost { get; private set; }
 
 
     public App()
     {
-        AppHost = Host.CreateDefaultBuilder()
-            .ConfigureServices((context, services) =>
-            {
 
-                services.AddSingleton<INavigationService, NavigationService>();
-                services.AddSingleton<IContentDialogService, ContentDialogService>();
-
-                services.AddSingleton<ProcessLauncherService>();
-                services.AddSingleton<ProcessMonitorService>();
-                services.AddSingleton<FileSaveService>();
-                services.AddSingleton<ModalService>();
-
-                services.AddSingleton<MainWindow>();
-                services.AddSingleton<ViewModels.MainViewModel>();
-            })
-            .Build();
+       
     }
 
 
     public static readonly Mutex SingleInstanceMutex = new Mutex(true, @"Global\EchoAppSingleInstanceMutex");
+
     private CancellationTokenSource pipeServerCancellation = new();
     private Task pipeServerTask;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+
+        bool isHandover = Environment.GetCommandLineArgs().Contains("-handover");
+
+        if (isHandover)
+        {
+            // First instance: launch second instance and exit
+            var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+            if (exePath != null)
+            {
+
+                var options = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = exePath,
+                    UseShellExecute = true
+                };
+                System.Diagnostics.Process.Start(options);
+            }
+            Current.Shutdown();
+            return;
+        }
+
+       
 
         if (!SingleInstanceMutex.WaitOne(0, false))
         {
@@ -55,7 +66,22 @@ public partial class App : Application
         }
 
 
+        AppHost = Host.CreateDefaultBuilder()
+           .ConfigureServices((context, services) =>
+           {
 
+               services.AddSingleton<INavigationService, NavigationService>();
+               services.AddSingleton<IContentDialogService, ContentDialogService>();
+
+               services.AddSingleton<ProcessLauncherService>();
+               services.AddSingleton<ProcessMonitorService>();
+               services.AddSingleton<FileSaveService>();
+               services.AddSingleton<ModalService>();
+
+               services.AddSingleton<MainWindow>();
+               services.AddSingleton<ViewModels.MainViewModel>();
+           })
+           .Build();
 
         await AppHost.StartAsync();
         var mainWindow = AppHost.Services.GetRequiredService<MainWindow>();
@@ -72,7 +98,11 @@ public partial class App : Application
 
     protected override async void OnExit(ExitEventArgs e)
     {
-        await AppHost.StopAsync();
+        if (AppHost != null)
+        {
+            await AppHost.StopAsync();
+        }
+        
         base.OnExit(e);
     }
 
