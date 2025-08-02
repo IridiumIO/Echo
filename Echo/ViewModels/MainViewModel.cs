@@ -149,27 +149,21 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ProcessDele
 
     }
 
-    private void OnProcessDetected(string processName, int processID)
+    private void OnProcessDetected(ProcessTrigger trigger, int processID)
     {
-        var trigger = Triggers.FirstOrDefault(t =>
-            t.ProcessTrigger.TargetProcessPaths.Any(path =>
-                processName.Equals(System.IO.Path.GetFileName(path), StringComparison.OrdinalIgnoreCase))
-        );
+
         if (trigger != null)
         {
-            _processLauncherService.LaunchProcesses(trigger.ProcessTrigger.RipplePrograms);
+            _processLauncherService.LaunchProcesses(trigger.RipplePrograms);
         }
     }
 
-    private void OnProcessExited(string processName, int processID)
+    private void OnProcessExited(ProcessTrigger trigger, int processID)
     {
-        var triggerVM = Triggers.FirstOrDefault(t =>
-        t.ProcessTrigger.TargetProcessPaths.Any(path =>
-            processName.Equals(System.IO.Path.GetFileName(path), StringComparison.OrdinalIgnoreCase))
-        );
-        if (triggerVM != null)
+
+        if (trigger != null)
         {
-            foreach (var ripple in triggerVM.ProcessTrigger.RipplePrograms)
+            foreach (var ripple in trigger.RipplePrograms)
             {
                 if (ripple.Process != null && !ripple.Process.HasExited && ripple.ProcessTriggerOptions.TerminateHelpersOnTargetExit)
                 {

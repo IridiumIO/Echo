@@ -1,6 +1,7 @@
 ﻿using Echo.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Management;
@@ -16,7 +17,7 @@ public class ProcessMonitorService
     private ManagementEventWatcher? _deletionWatcher;
     private readonly Dictionary<string, int> _runningProcessIds = new();
 
-    public void StartMonitoring(IEnumerable<ProcessTrigger> triggers, Action<string, int> onProcessStarted, Action<string, int> onProcessExited)
+    public void StartMonitoring(IEnumerable<ProcessTrigger> triggers, Action<ProcessTrigger, int> onProcessStarted, Action<ProcessTrigger, int> onProcessExited)
     {
         // Listen for process creation
         string creationQuery = "SELECT * FROM __InstanceCreationEvent WITHIN 2 WHERE TargetInstance ISA 'Win32_Process'";
@@ -38,10 +39,10 @@ public class ProcessMonitorService
 
 
                 // Check if processName matches any file name in TargetProcessPaths
-                if (trigger.TargetProcessPaths.Any(path => processName.Equals(Path.GetFileName(path), StringComparison.OrdinalIgnoreCase)))
+                if ((executablePath is not null) && trigger.TargetProcessPaths.Any(path => processName.Equals(Path.GetFileName(path), StringComparison.OrdinalIgnoreCase)))
                 {
-                    _runningProcessIds[processName] = processId;
-                    onProcessStarted?.Invoke(processName, processId);
+                    _runningProcessIds[executablePath] = processId;
+                    onProcessStarted?.Invoke(trigger, processId);
                 }
             }
         };
@@ -55,10 +56,19 @@ public class ProcessMonitorService
             var targetInstance = (ManagementBaseObject)e.NewEvent["TargetInstance"];
             string processName = (string)targetInstance["Name"];
             int processId = Convert.ToInt32(targetInstance["ProcessId"]);
-            if (_runningProcessIds.TryGetValue(processName, out int trackedId) && trackedId == processId)
+            string? executablePath = targetInstance["ExecutablePath"] as string;
+            string processKey = executablePath ?? processName;
+            if (_runningProcessIds.TryGetValue(processKey, out int trackedId) && trackedId == processId)
             {
-                _runningProcessIds.Remove(processName);
-                onProcessExited?.Invoke(processName, processId);
+                _runningProcessIds.Remove(processKey);
+
+                var trigger = triggers.FirstOrDefault(t =>
+                    executablePath != null
+                        ? t.TargetProcessPaths.Any(path => executablePath.EndsWith(path, StringComparison.OrdinalIgnoreCase))
+                        : t.TargetProcessPaths.Any(path => processName.Equals(Path.GetFileName(path), StringComparison.OrdinalIgnoreCase))
+                );
+
+                onProcessExited?.Invoke(trigger, processId);
             }
         };
         _deletionWatcher.Start();
