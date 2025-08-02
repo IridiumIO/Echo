@@ -67,7 +67,7 @@
                     <Run Text="❱" Foreground="#077f55" />
                     <Run Text="❱" Foreground="#40077f55" />
                 </TextBlock>-->
-                <TextBlock Text="Version 1.0"
+                <TextBlock Text="Version 1.0.1"
                            HorizontalAlignment="Center"
                            Foreground="#10ffffff" />
             </StackPanel>
