@@ -69,6 +69,8 @@ public partial class SelectSteamGameDialog : ContentDialog
 
     private DirectoryInfo? GetSteamInstallDir()
     {
+
+        // 1. Check Steam Registry Key for installation path
         var key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Valve\\Steam") ??
                       RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
                           .OpenSubKey("SOFTWARE\\Valve\\Steam");
@@ -80,6 +82,57 @@ public partial class SelectSteamGameDialog : ContentDialog
                 return new DirectoryInfo(installPath);
             }
         }
+
+        // 2. Check custom Echo registry key for Steam path
+        var customKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Iridium\\Echo\\");
+        if (customKey != null)
+        {
+            string? customPath = customKey.GetValue("SteamInstallPath") as string;
+            if (!string.IsNullOrEmpty(customPath) && Directory.Exists(customPath))
+            {
+                if (File.Exists(Path.Combine(customPath, "appcache", "appinfo.vdf")))
+                {
+                    return new DirectoryInfo(customPath);
+
+                }
+            }
+        }
+
+        // 3. If no path found, show message box and allow user to browse for steam.exe
+        var uiMessageBox = new Wpf.Ui.Controls.MessageBox
+        {
+            Title = "Unable to automatically locate Steam",
+            Content = "Please select the Steam executable (steam.exe) manually.",
+            CloseButtonText = "Browse...",
+        };
+        _ = uiMessageBox.ShowDialogAsync();
+
+
+
+        var fileSelectionDialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Select Steam Executable",
+            Filter = "Steam Executable|steam.exe",
+            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
+        };
+
+     
+
+        if (fileSelectionDialog.ShowDialog() == true)
+        {
+            var steamExePath = fileSelectionDialog.FileName;
+            var steamDir = Path.GetDirectoryName(steamExePath);
+            if (steamDir != null && Directory.Exists(steamDir))
+            {
+                // Save the custom path to the registry for future use
+                using (var customKeyToWrite = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Iridium\\Echo\\"))
+                {
+                    customKeyToWrite?.SetValue("SteamInstallPath", steamDir);
+                }
+                return new DirectoryInfo(steamDir);
+            }
+        }
+
         return null;
     }
 

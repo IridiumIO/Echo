@@ -208,9 +208,10 @@ public partial class MainViewModel : ObservableRecipient, IRecipient<ProcessDele
             var uiMessageBox = new Wpf.Ui.Controls.MessageBox
             {
                 Title = "Steam Library Unable to be Located",
-                Content = "Please use the standard 'Add Program' option instead",
+                Content = "Please use the standard 'Add Program' option instead"
             };
             _ = uiMessageBox.ShowDialogAsync();
+            return;
         }
 
         ContentDialogResult result = await steamDialog.ShowAsync();
