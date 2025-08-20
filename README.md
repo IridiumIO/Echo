@@ -17,7 +17,7 @@ Most importantly, it can then optionally *close* all those extra programs when t
 
 If you wish to support me, you can download Echo from Steam for the price of a coffee (coming soon)
 
-<p align="center"><a href="https://github.com/ImminentFate/CompactGUI/releases"><img src="https://img.shields.io/badge/Download-000000?style=for-the-badge&logo=Steam&logoColor=white&label=Steam" height=50></a>
+<p align="center"><a href="https://store.steampowered.com/app/3926000/Echo/"><img src="https://img.shields.io/badge/Download-000000?style=for-the-badge&logo=Steam&logoColor=white&label=Steam" height=50></a>
 
 Otherwise, it is always available for free from the Github releases page.
 
