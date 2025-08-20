@@ -10,7 +10,16 @@
 ---
 Instead of manually opening several programs, creating batch files, or using the Task Scheduler to set up your environment, Echo uses native Windows monitors to detect when you run a specified program, and then automatically launches any number of selected programs/processes/websites/folders/files/etc. 
 
-Most importantly, it can then optionally *close* all those extra programs when the main game / program exits. <sup>See caveats</sup> 
+Most importantly, it can then optionally *close* all those extra programs when the main game / program exits. No need to set everything to run on Windows Startup, they can open/close with your other programs instead. <sup>See caveats</sup> 
+
+
+## Installation
+
+If you wish to support me, you can download Echo from Steam for the price of a coffee (coming soon)
+
+<p align="center"><a href="https://github.com/ImminentFate/CompactGUI/releases"><img src="https://img.shields.io/badge/Download-000000?style=for-the-badge&logo=Steam&logoColor=white&label=Steam" height=50></a>
+
+Otherwise, it is always available for free from the Github releases page.
 
 ## Features
 
@@ -37,6 +46,9 @@ When running Path of Exile, I always want the following to run:
 - POE Overlay
 - A custom autohotkey script
 - Open the POE Trade website
+
+Or, when opening Steam:
+- Run Steam Achievement Notifier
 
 Or, when running Visual Studio:
 - Open Postman
