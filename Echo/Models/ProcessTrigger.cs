@@ -64,6 +64,7 @@ public partial class ProcessTriggerOptions : ObservableObject
     [ObservableProperty] private bool launchHidden = false; // Start helpers minimised (screw hidden, you lose so many programs)
     [ObservableProperty] private bool allowMultiple  = false; // Only launch helpers if they are not already running
     [ObservableProperty] private bool terminateHelpersOnTargetExit  = true; // Terminate helpers when the target process exits
+    [ObservableProperty] private string arguments = string.Empty;
 
     //public TimeSpan LaunchDelay { get; set; } = TimeSpan.Zero; 
     //public bool RunAsAdministrator { get; set; } = false; 

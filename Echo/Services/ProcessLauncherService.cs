@@ -37,7 +37,7 @@ public class ProcessLauncherService
         {
             ripple.Process = ShellExecuteHelper.ShellExecuteAndGetProcess(
                  ripple.RippleProcessPath,
-                 null,
+                 ripple.ProcessTriggerOptions.Arguments,
                  null,
                  nshow: ripple.ProcessTriggerOptions.LaunchHidden ? 2 : 1 // SW_HIDE : SW_SHOWNORMAL : SW_SHOWMINIMISED
              );

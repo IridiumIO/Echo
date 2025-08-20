@@ -233,7 +233,7 @@
                      IsTabStop="False"
                      ItemsSource="{Binding ProcessTrigger.RipplePrograms}"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-
+           
             <ui:ListView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="15,0"
@@ -299,7 +299,7 @@
                                   IsChecked="{Binding ProcessTriggerOptions.TerminateHelpersOnTargetExit}" />
 
                         <!--  Delete Button  -->
-                        <ui:Button Grid.Column="4"
+                        <ui:Button Grid.Column="4" Grid.RowSpan="2"
                                    Width="26" Height="26"
                                    Margin="0,0,-20,0" Padding="0" HorizontalAlignment="Right" VerticalAlignment="Center"
                                    BorderBrush="{StaticResource PaletteRedBrush}"
@@ -333,6 +333,24 @@
                             </ui:Button.Style>
                         </ui:Button>
 
+                        <!-- Second row: hidden by default, visible on hover -->
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="5" Orientation="Horizontal">
+                            <!-- Example controls, replace with your own -->
+                            <TextBlock Text="Launch Arguments: " Margin="35 0 0 0" VerticalAlignment="Center" FontWeight="SemiBold" FontSize="13" Foreground="#40FFFFFF"/>
+                            <ui:TextBox Width="385" HorizontalAlignment="Stretch" Text="{Binding ProcessTriggerOptions.Arguments, UpdateSourceTrigger=PropertyChanged}" Foreground="LightGray" Margin="100,2,0,2"/>
+                            
+
+                            <StackPanel.Style>
+                                <Style TargetType="StackPanel">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=ListViewItem}}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </StackPanel.Style>
+                        </StackPanel>
                     </Grid>
 
                 </DataTemplate>
