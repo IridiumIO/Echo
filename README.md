@@ -63,7 +63,7 @@ This is why an option to run programs in `Hidden` mode is not included; you will
 ## Planned (for triggered processes)
 - [ ] Run as Admin
 - [ ] Delay start
-- [ ] Custom arguments
+- [X] Custom arguments
 - [ ] Run triggered process on program exit instead of program startup
 
  -----
